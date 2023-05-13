@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import styles from "./styles/MainPage.module.css";
 import axios from "axios";
-const chartRow = (value) => {
-    return (<React.Fragment><div><div className={styles.chartRow} style={{ width: value === 5 ? ((value/5)*100)-10 + "%" : (value/5)*100 + "%" }}>
-    </div>
-        <span className={styles.chartRowValue}>{value}</span></div>
-    </React.Fragment>)
-}
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import AccountCircle from '@mui/icons-material/AccountCircle';
+import MenuItem from '@mui/material/MenuItem';
+import Menu from '@mui/material/Menu';
+
 const MainPage = () => {
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const open = Boolean(anchorEl);
     const [data, setData] = useState({
         form: {
             id: "شناسه‌ی فرم پر شده",
@@ -36,63 +42,82 @@ const MainPage = () => {
             ]
         }
     });
-    React.useEffect(() => {
-        // axios.post("")
-    }, [])
-    return (<React.Fragment>
-        <div className={styles.NavBar}>
-            میثم شاهسون
-        </div>
-        <div className={styles.chartContainer}>
-            <div className={styles.chartContainerTitle}>
-                نتایج پرسشنامه به صورت نمودار
-            </div>
-            <div className={styles.chart}>
-                <div className={styles.chartTitle}>
-                    نمودار محک جز به جز فرد 1
-                </div>
-                <br />
-                {chartRow(2)}
-                {chartRow(5)}
-                {chartRow(3)}
-                {chartRow(4)}
-                {chartRow(1)}
-            </div>
-            <div className={styles.chart}>
-                <div className={styles.chartTitle}>
-                    نمودار محک کلی فرد 1
-                </div>
-                <br />
-                {chartRow(2)}
-                {chartRow(5)}
-                {chartRow(3)}
-                {chartRow(4)}
-                {chartRow(1)}
-            </div>
-            <div className={styles.chart}>
-                <div className={styles.chartTitle}>
-                    نمودار محک جز به جز فرد 2
-                </div>
-                <br />
-                {chartRow(2)}
-                {chartRow(5)}
-                {chartRow(3)}
-                {chartRow(4)}
-                {chartRow(1)}
-            </div>
-            <div className={styles.chart}>
-                <div className={styles.chartTitle}>
-                    نمودار محک کلی فرد 2
-                </div>
-                <br />
-                {chartRow(2)}
-                {chartRow(5)}
-                {chartRow(3)}
-                {chartRow(4)}
-                {chartRow(1)}
-            </div>
-        </div>
-    </React.Fragment>)
+    const [auth, setAuth] = React.useState(true);
+
+    const handleMenu = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    const MenuItems = (login) => {
+        if (login) {
+            return (<React.Fragment>
+                <MenuItem onClick={handleClose}><p className={styles.menuItems}>ناحیه کاربری</p></MenuItem>
+                <MenuItem onClick={handleClose}><p className={styles.menuItems}>تنظیمات</p></MenuItem>
+            </React.Fragment>)
+        } else {
+            return (<React.Fragment>
+                <MenuItem onClick={handleClose}><p className={styles.menuItems}>ورود</p></MenuItem>
+                <MenuItem onClick={handleClose}><p className={styles.menuItems}>ثبت نام</p></MenuItem>
+            </React.Fragment>)
+        }
+    }
+    return (
+        <Box sx={{ flexGrow: 1 }}>
+            <AppBar position="static">
+                <Toolbar>
+                    <IconButton
+                        size="large"
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{ mr: 2 }}
+                        onClick={()=>alert("Hello")}
+                    >
+                    <MenuIcon />
+                    </IconButton>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                        <span className={styles.navbarTitle}>نرم افزار گزارش گیری</span>
+                    </Typography>
+                    {auth && (
+                        <div>
+                            <IconButton
+                                size="large"
+                                aria-label="account of current user"
+                                aria-controls="menu-appbar"
+                                aria-haspopup="true"
+                                onClick={handleMenu}
+                                color="inherit"
+                            >
+                                <AccountCircle />
+                            </IconButton>
+                            <Menu
+                                id="menu-appbar"
+                                anchorEl={anchorEl}
+                                anchorOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                keepMounted
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                                open={Boolean(anchorEl)}
+                                onClose={handleClose}
+                            >
+                                {
+                                    auth ? MenuItems(true) : MenuItems(false)
+                                }
+                            </Menu>
+                        </div>
+                    )}
+                </Toolbar>
+            </AppBar>
+        </Box>
+    );
 }
 
 export default MainPage;
